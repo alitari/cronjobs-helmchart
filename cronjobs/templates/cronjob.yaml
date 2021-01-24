@@ -1,0 +1,38 @@
+{{- range .Values.schedulers }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "cronjobs.fullname" $ }}-{{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  jobTemplate:
+    metadata:
+      name: {{ include "cronjobs.fullname" $ }}-{{ .name }}
+    spec:
+      template:
+        metadata:
+          {{- with $.Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          containers:
+          - name: {{ include "cronjobs.fullname" $ }}-{{ .name }}
+            image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
+            imagePullPolicy: {{ $.Values.image.pullPolicy }}
+            command: 
+            - "/bin/sh"
+            args:
+            - /scripts/{{ .name }}.sh
+            volumeMounts:
+            - name: script-volume
+              mountPath: /scripts
+            resources:
+              {{- toYaml $.Values.resources | nindent 14 }}
+          restartPolicy: OnFailure
+          volumes:
+          - name: script-volume
+            configMap:
+              name: {{ include "cronjobs.fullname" $ }}
+{{- end }}
