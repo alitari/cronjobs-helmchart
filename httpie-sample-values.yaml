@@ -1,0 +1,27 @@
+schedulers:
+- name: post-scheduler
+  schedule:  "*/1 * * * *"
+  script: |
+    http -v -a ${USERNAME}:${PASSWORD} POST https://httpbin.org/post
+- name: get-scheduler
+  schedule:  "*/2 * * * *"
+  script: |
+    http -v -a ${USERNAME}:${PASSWORD} GET https://httpbin.org/get
+
+image:
+  repository: alpine/httpie
+
+env:
+  USERNAME: "myuser"
+  PASSWORD: "mypassword"
+
+podAnnotations: {}
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

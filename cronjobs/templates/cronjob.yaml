@@ -25,6 +25,14 @@ spec:
             - "/bin/sh"
             args:
             - /scripts/{{ .name }}.sh
+            env:
+            {{- range $key, $val := $.Values.env }}
+              - name: {{ $key }}
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ include "cronjobs.fullname" $ }}
+                    key: {{ $key | lower }}
+            {{- end}}
             volumeMounts:
             - name: script-volume
               mountPath: /scripts

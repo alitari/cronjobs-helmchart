@@ -49,14 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "cronjobs.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "cronjobs.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "cronjobs.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}

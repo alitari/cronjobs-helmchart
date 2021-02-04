@@ -1,8 +1,4 @@
 # Default values for cronjobs.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-
 schedulers:
 - name: scheduler1
   schedule:  "*/1 * * * *"
@@ -18,6 +14,9 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
+
+# environment variables stores as secrets
+env: {}
 
 podAnnotations: {}
 
